@@ -1,6 +1,5 @@
 import express from 'express'
 import { Profil } from './types/profil.type'
-import { json } from 'node:stream/consumers'
 
 const app = express()
 app.use(express.json())
