@@ -3,47 +3,64 @@ import { ref, onMounted } from "vue"
 import type { Profil }  from "./types/profil.type";
 
 
+
 const profils = ref<Profil[]>([])
 const name = ref<string>("")
 const role = ref<"captain" | "crew">("captain")
-
-function initLocalStorage() {
   
-  const initStorage = localStorage.getItem("profils")
+  
+onMounted(async () => {
+  const response = await fetch('http://localhost:3000/profils')
+  const data = await response.json()
 
-  if(initStorage) {
-    profils.value = JSON.parse(initStorage)
-  }
-}
-
-onMounted(() =>  {
-  initLocalStorage()
+  profils.value = data
 })
 
+async function postProfil(newProfil: Profil) {
+  const response = await fetch('http://localhost:3000/profils', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify(newProfil)
+  })
+
+  const data = await response.json()
+
+  profils.value.push(data)
+
+}
+
 function createProfil() {
-
+  
   if(!name.value.trim()) return
-
+  
   const newProfil = {
     id: crypto.randomUUID(),
     name: name.value,
     role: role.value
   }
-
-  profils.value.push(newProfil)
-
-  localStorage.setItem("profils", JSON.stringify(profils.value))
-
+  
+  
+  postProfil(newProfil)
+  
   name.value = ""
+}
 
+async function eraseProfil(id: string) {
+  await fetch(`http://localhost:3000/profils/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }) 
 }
 
 function deleteProfil(id: string) {
 
   profils.value = profils.value.filter(profil => profil.id !== id) 
   
-
-  localStorage.setItem("profils", JSON.stringify(profils.value))
+  eraseProfil(id)
 
 }
 

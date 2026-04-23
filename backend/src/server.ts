@@ -1,11 +1,13 @@
 import express from 'express'
+import cors from 'cors'
 import { Profil } from './types/profil.type'
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 const port: number = 3000
 
-const profils: Profil[] = []
+let profils: Profil[] = []
 
 app.get('/profils', (request, response) => {
   response.status(200).json(profils)
@@ -20,9 +22,17 @@ app.post('/profils', (request, response) => {
     role: data.role,
   }
 
-  const profil = profils.push(newProfil)
+  profils.push(newProfil)
 
-  response.status(201).send(profil)
+  response.status(201).send(newProfil)
+})
+
+app.delete('/profils/:id', (request, response) => {
+  const dataId = request.params.id
+
+  profils = profils.filter((profil) => profil.id !== dataId)
+
+  response.status(200).send(profils)
 })
 
 app.listen(port, () => {
