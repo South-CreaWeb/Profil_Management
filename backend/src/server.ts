@@ -29,9 +29,9 @@ app.post('/profils', (request, response) => {
 
 app.delete('/profils/:id', (request, response) => {
   const dataId = request.params.id
-
+  console.log('avant', profils)
   profils = profils.filter((profil) => profil.id !== dataId)
-
+  console.log('après', profils)
   response.status(200).send(profils)
 })
 
