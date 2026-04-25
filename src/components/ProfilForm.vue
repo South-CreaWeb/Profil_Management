@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const name = ref<string>('')
 const role = ref<"captain" | "crew">("captain")
+
+const isValid = computed(() => name.value.trim().length > 0)
+
+const props = defineProps<{
+    loading: boolean
+}>()
 
 const emit = defineEmits<{
     (emit: 'create', data: { name: string, role: "captain" | "crew"}): void
@@ -29,6 +35,6 @@ function handleSubmit() {
         <option value="crew">Crew</option>
         </select>
 
-        <button @click="handleSubmit">Add profil</button>
+        <button @click="handleSubmit" :disabled="props.loading || !isValid">Add profil</button>
   </section>
 </template>

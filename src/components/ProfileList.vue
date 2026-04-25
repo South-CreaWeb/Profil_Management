@@ -2,7 +2,8 @@
 import type { Profil } from "../types/profil.type";
 
 const props = defineProps<{
-    profils: Profil[]
+    profils: Profil[],
+    loading: boolean
 }>()
 
 const emit = defineEmits<{
@@ -16,7 +17,7 @@ const emit = defineEmits<{
       <li v-for="profil in props.profils" :key="profil.id">
         <span>Name: {{ profil.name }}</span> 
         <span>Role: {{ profil.role }}</span>
-        <button @click="emit('delete', profil.id)">Delete profil</button>
+        <button @click="emit('delete', profil.id)" :disabled="props.loading">Delete profil</button>
       </li>
     </ul>
   </section>

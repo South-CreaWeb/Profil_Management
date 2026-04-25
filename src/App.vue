@@ -4,10 +4,17 @@ import type { Profil }  from "./types/profil.type";
 import { getProfils, createProfil, deleteProfil} from "../src/api/profils"
 import ProfilList from "./components/ProfileList.vue";
 import ProfilForm from "./components/ProfilForm.vue"
+import Notifications from "./components/Notifications.vue";
 
 
 
 const profils = ref<Profil[]>([])
+const message = ref<{ text: string, type: "success" | "error"}>({
+  text: "",
+  type: "" as "success" | "error"
+})
+const loadingCreate = ref<boolean>(false)
+const loadingDelete = ref<boolean>(false)
   
 onMounted(async () => {
   profils.value = await getProfils()
@@ -15,17 +22,67 @@ onMounted(async () => {
 
 
 async function handleCreate(data: { name: string, role: "captain" | "crew"}) {
-  
-  const newProfil = await createProfil(data)
+  if(loadingCreate.value) return 
 
-  profils.value.push(newProfil)
+  loadingCreate.value = true
+
+  try {
+    const newProfil = await createProfil(data)
+    profils.value.push(newProfil)
+    message.value = {
+      text: "Profil ajouté",
+      type: "success"
+    }
+  } catch (error) {
+    message.value = {
+      text: "Erreur lors de l'ajout",
+      type: "error"
+    }
+  }
+
+  loadingCreate.value = false
+
+
+  setTimeout(() => {
+   message.value = {
+    text: "",
+    type: "success"
+  }
+  }, 2000)
 }
 
 async function handleDelete(id: string) {
-  await deleteProfil(id)
+  if(loadingDelete.value) return 
 
-  profils.value = profils.value.filter(profil => profil.id !== id)
+  loadingDelete.value = true
 
+  message.value = {
+    text: "",
+    type: "success"
+  }
+  
+  try {
+    await deleteProfil(id)
+    profils.value = profils.value.filter(profil => profil.id !== id)
+    message.value = {
+      text: "Profil supprimé",
+      type: "success"
+    }
+  } catch (error) {
+    message.value = {
+      text: "Erreur lors de la suppression",
+      type: "error"
+    }
+  }
+
+  loadingDelete.value = false
+
+  setTimeout(() => {
+    message.value = {
+      text: "",
+      type: "success"
+    }
+  }, 2000)
 }
 
 </script>
@@ -35,7 +92,9 @@ async function handleDelete(id: string) {
 
   <h1>Create Profil</h1>
 
-  <ProfilForm @create="handleCreate"/>
-  <ProfilList :profils="profils" @delete="handleDelete"/>
+  
+  <ProfilForm @create="handleCreate" :loading="loadingCreate"/>
+  <Notifications :message="message"/>
+  <ProfilList :profils="profils" @delete="handleDelete" :loading="loadingDelete"/>
 
 </template>
