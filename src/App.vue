@@ -2,30 +2,23 @@
 import { ref, onMounted } from "vue"
 import type { Profil }  from "./types/profil.type";
 import { getProfils, createProfil, deleteProfil} from "../src/api/profils"
+import ProfilList from "./components/ProfileList.vue";
+import ProfilForm from "./components/ProfilForm.vue"
 
 
 
 const profils = ref<Profil[]>([])
-const name = ref<string>("")
-const role = ref<"captain" | "crew">("captain")
   
 onMounted(async () => {
   profils.value = await getProfils()
 })
 
 
-async function handleCreate() {
+async function handleCreate(data: { name: string, role: "captain" | "crew"}) {
   
-  if(!name.value.trim()) return
-  
-  const newProfil = await createProfil({
-    name: name.value,
-    role: role.value
-  })
+  const newProfil = await createProfil(data)
 
   profils.value.push(newProfil)
-
-  name.value = ""
 }
 
 async function handleDelete(id: string) {
@@ -42,21 +35,7 @@ async function handleDelete(id: string) {
 
   <h1>Create Profil</h1>
 
-  <input type="text" v-model="name">
-
-  <select v-model="role">
-    <option value="captain">Captain</option>
-    <option value="crew">Crew</option>
-  </select>
-
-  <button @click="handleCreate">Add profil</button>
-
-  <ul>
-    <li v-for="profil in profils" :key="profil.id">
-      <span>Name: {{ profil.name }}</span> 
-      <span>Role: {{ profil.role }}</span>
-      <button @click="handleDelete(profil.id)">Delete profil</button>
-    </li>
-  </ul>
+  <ProfilForm @create="handleCreate"/>
+  <ProfilList :profils="profils" @delete="handleDelete"/>
 
 </template>
