@@ -27,6 +27,15 @@ app.post('/profils', (request, response) => {
   response.status(201).send(newProfil)
 })
 
+app.put('/profils/:id', (request, response) => {
+  const id = request.params.id
+  const { name, role } = request.body
+
+  profils = profils.map((profil) => (profil.id === id ? { ...profil, name, role } : profil))
+
+  response.status(200).json({ id, name, role })
+})
+
 app.delete('/profils/:id', (request, response) => {
   const dataId = request.params.id
 

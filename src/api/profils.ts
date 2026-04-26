@@ -17,6 +17,18 @@ export async function createProfil(data: { name: string; role: string }) {
   return await response.json()
 }
 
+export async function updateProfil(id: string, data: { name: string; role: string }) {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+
+  return await response.json()
+}
+
 export async function deleteProfil(id: string) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: 'DELETE',

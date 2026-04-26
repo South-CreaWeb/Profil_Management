@@ -8,6 +8,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (emit: "delete", id: string): void
+    (emit: 'edit', profil: Profil): void
 }>()
 </script>
 
@@ -17,6 +18,7 @@ const emit = defineEmits<{
       <li v-for="profil in props.profils" :key="profil.id">
         <span>Name: {{ profil.name }}</span> 
         <span>Role: {{ profil.role }}</span>
+        <button @click="emit('edit', profil)">Edit</button>
         <button @click="emit('delete', profil.id)" :disabled="props.loading">Delete profil</button>
       </li>
     </ul>

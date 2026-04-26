@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import type { Profil } from "../types/profil.type"
 
 const name = ref<string>('')
 const role = ref<"captain" | "crew">("captain")
@@ -7,7 +8,8 @@ const role = ref<"captain" | "crew">("captain")
 const isValid = computed(() => name.value.trim().length > 0)
 
 const props = defineProps<{
-    loading: boolean
+    loading: boolean,
+    editingProfil: Profil | null
 }>()
 
 const emit = defineEmits<{
@@ -24,6 +26,14 @@ function handleSubmit() {
 
     name.value = ''
 }
+
+watch(() => props.editingProfil, (newProfil) => {
+    if(newProfil) {
+        name.value = newProfil.name
+        role.value = newProfil.role
+    }
+})
+
 </script>
 
 <template>
@@ -35,6 +45,8 @@ function handleSubmit() {
         <option value="crew">Crew</option>
         </select>
 
-        <button @click="handleSubmit" :disabled="props.loading || !isValid">Add profil</button>
+        <button @click="handleSubmit" :disabled="props.loading || !isValid">
+            {{ props.editingProfil ? "update profil" : "Add profil" }} 
+        </button>
   </section>
 </template>

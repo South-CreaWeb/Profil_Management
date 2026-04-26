@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 import type { Profil }  from "./types/profil.type";
-import { getProfils, createProfil, deleteProfil} from "../src/api/profils"
+import { getProfils, createProfil, updateProfil , deleteProfil} from "../src/api/profils"
 import ProfilList from "./components/ProfileList.vue";
 import ProfilForm from "./components/ProfilForm.vue"
 import Notifications from "./components/Notifications.vue";
@@ -15,6 +15,7 @@ const message = ref<{ text: string, type: "success" | "error"}>({
 })
 const loadingCreate = ref<boolean>(false)
 const loadingDelete = ref<boolean>(false)
+const editingProfil = ref<Profil | null>(null)
   
 onMounted(async () => {
   profils.value = await getProfils()
@@ -27,11 +28,21 @@ async function handleCreate(data: { name: string, role: "captain" | "crew"}) {
   loadingCreate.value = true
 
   try {
-    const newProfil = await createProfil(data)
-    profils.value.push(newProfil)
-    message.value = {
-      text: "Profil ajouté",
-      type: "success"
+    if(editingProfil.value) {
+      //UPDATE
+      const update = await updateProfil(editingProfil.value.id, data)
+
+      profils.value = profils.value.map(profil => 
+        profil.id === update.id ? update : profil
+      )
+
+      editingProfil.value = null
+      message.value = { text: "Profil modifié", type: "success" }
+    } else {
+      //CREATE
+      const newProfil = await createProfil(data)
+      profils.value.push(newProfil)
+      message.value = {text: "Profil ajouté", type: "success"}
     }
   } catch (error) {
     message.value = {
@@ -85,6 +96,10 @@ async function handleDelete(id: string) {
   }, 2000)
 }
 
+function handleEdit(profil: Profil) {
+  editingProfil.value = profil
+}
+
 </script>
 
 
@@ -93,8 +108,8 @@ async function handleDelete(id: string) {
   <h1>Create Profil</h1>
 
   
-  <ProfilForm @create="handleCreate" :loading="loadingCreate"/>
+  <ProfilForm @create="handleCreate" :editingProfil="editingProfil" :loading="loadingCreate"/>
   <Notifications :message="message"/>
-  <ProfilList :profils="profils" @delete="handleDelete" :loading="loadingDelete"/>
+  <ProfilList :profils="profils" @delete="handleDelete" @edit="handleEdit" :loading="loadingDelete"/>
 
 </template>
