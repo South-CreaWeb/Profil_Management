@@ -104,12 +104,66 @@ function handleEdit(profil: Profil) {
 
 
 <template>
+  <div class="wrapper">
+    <nav class="title_app">
+      <h1>Create Profil</h1>
+      <p>Create your own profil</p>
+    </nav>
 
-  <h1>Create Profil</h1>
-
-  
-  <ProfilForm @create="handleCreate" :editingProfil="editingProfil" :loading="loadingCreate"/>
-  <Notifications :message="message"/>
-  <ProfilList :profils="profils" @delete="handleDelete" @edit="handleEdit" :loading="loadingDelete"/>
+    <section class="display_form">
+      <ProfilForm @create="handleCreate" :editingProfil="editingProfil" :loading="loadingCreate"/>
+    </section>
+    <div class="spacing_1"></div>
+    <section class="display_notifs">
+      <Notifications :message="message"/>
+    </section>
+    <div class="spacing_2"></div>
+    <section class="display_profil">
+      <ProfilList :profils="profils" @delete="handleDelete" @edit="handleEdit" :loading="loadingDelete"/>
+    </section>
+  </div>
 
 </template>
+
+<style>
+/** LAYOUT */
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  grid-template-rows: minmax(100px, auto);
+}
+
+.wrapper .title_app {
+  grid-column: 2 / 4;
+}
+
+.wrapper .spacing_1 {
+  grid-column: 1 / 4;
+  grid-row: 2;
+  height: 25px;
+}
+
+.wrapper .display_form {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.wrapper .spacing_2 {
+  grid-column: 1 / 4;
+  grid-row: 4;
+  height: 100px;
+}
+
+.wrapper .display_profil {
+  grid-column: 2 / 4;
+  grid-row: 5
+}
+
+/** DISPLAY TITLE */
+.title_app {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+</style>
