@@ -38,11 +38,11 @@ watch(() => props.editingProfil, (newProfil) => {
 
 <template>
     <section class="form_profil">
-        <input type="text" v-model="name">
+        <input type="text" v-model="name" placeholder="Enter your name">
 
         <select v-model="role">
-        <option value="captain">Captain</option>
-        <option value="crew">Crew</option>
+            <option value="captain">Captain</option>
+            <option value="crew">Crew</option>
         </select>
 
         <button @click="handleSubmit" :disabled="props.loading || !isValid">
@@ -50,3 +50,48 @@ watch(() => props.editingProfil, (newProfil) => {
         </button>
   </section>
 </template>
+
+<style scoped>
+.form_profil {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form_profil input {
+    border-bottom: 1px solid #2563eb;
+}
+
+.form_profil input:focus {
+    border-bottom: 2px solid #1d4ed8;
+}
+
+.form_profil select, .form_profil button {
+    margin-left: 50%;
+    max-width: 50%;
+}
+
+.form_profil select, .form_profil button {
+    padding: 5px;
+}
+
+.form_profil select {
+    color: #2563eb;
+    border: 1px solid #2563eb;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.form_profil button {
+    color: #2563eb;
+    border: 1px solid #2563eb;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.form_profil button:hover {
+    background-color: #1d4ed8;
+    color: #ffffff;
+}
+
+</style>

@@ -55,10 +55,10 @@ async function handleCreate(data: { name: string, role: "captain" | "crew"}) {
 
 
   setTimeout(() => {
-   message.value = {
-    text: "",
-    type: "success"
-  }
+    message.value = {
+      text: "",
+      type: "success"
+    }
   }, 2000)
 }
 
@@ -129,13 +129,13 @@ function handleEdit(profil: Profil) {
 /** LAYOUT */
 .wrapper {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;
-  grid-template-rows: minmax(100px, auto);
+  grid-template-rows: repeat(100px, auto);
 }
 
 .wrapper .title_app {
-  grid-column: 2 / 4;
+  grid-column: 3 / 5;
 }
 
 .wrapper .spacing_1 {
@@ -145,25 +145,30 @@ function handleEdit(profil: Profil) {
 }
 
 .wrapper .display_form {
-  grid-column: 1;
+  grid-column: 1 / 3;
+  grid-row: 3;
+}
+
+.wrapper .display_notifs {
+  grid-column: 5 / 7;
   grid-row: 3;
 }
 
 .wrapper .spacing_2 {
   grid-column: 1 / 4;
   grid-row: 4;
-  height: 100px;
+  height: 75px;
 }
 
 .wrapper .display_profil {
-  grid-column: 2 / 4;
-  grid-row: 5
+  grid-column: 2 / 6;
+  grid-row: 5;
 }
 
 /** DISPLAY TITLE */
 .title_app {
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
 }
 </style>

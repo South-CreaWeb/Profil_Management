@@ -36,6 +36,10 @@ select {
     font: inherit;
 }
 
+input {
+    border: none;
+}
+
 button {
     cursor: pointer;
 }
@@ -48,4 +52,8 @@ ol {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+input:focus {
+    outline: none;
 }
